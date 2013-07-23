@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Dedup Analysis - Phase 1 with others data</title>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("visualization", "1", {
+		packages : [ "corechart" ]
+	});
+
+	// Set a callback to run when the API is loaded.
+	google.setOnLoadCallback(init);
+
+	// Send the queries to the data sources.
+	function init() {
+
+		var queryLineChart_Size = new google.visualization.Query(
+				'ph1wothersfetchbysize?tq=select FileExtension,Size,Count');
+		var queryLineChart_Count = new google.visualization.Query(
+				'ph1wothersfetchbycount?tq=select FileExtension,Size,Count');
+
+		var queryColChart_Size = new google.visualization.Query(
+				'ph1wothersfetchbysize?tq=select FileExtension,Size');
+		var queryColChart_Count = new google.visualization.Query(
+				'ph1wothersfetchbycount?tq=select FileExtension,Count');
+
+		queryLineChart_Size.send(handleLineChartSize);
+		queryLineChart_Count.send(handleLineChartCount);
+		queryColChart_Size.send(handleColChartSize);
+		queryColChart_Count.send(handleColChartCount);
+
+	}
+	//Handle the simple data source query response
+	function handleLineChartSize(response) {
+		if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' '
+					+ response.getDetailedMessage());
+			return;
+		}
+
+		var data = response.getDataTable();
+		var options = {
+			title : 'Size Vs Counts'
+
+		};
+
+		var chart = new google.visualization.LineChart(document
+				.getElementById('Linechart_div_size'));
+		chart.draw(data, options);
+	}
+	//Handle the simple data source query response
+	function handleLineChartCount(response) {
+		if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' '
+					+ response.getDetailedMessage());
+			return;
+		}
+
+		var data = response.getDataTable();
+		var options = {
+			title : 'Counts Vs Size'
+
+		};
+
+		var chart = new google.visualization.LineChart(document
+				.getElementById('Linechart_div_Count'));
+		chart.draw(data, options);
+	}
+
+	//Handle the simple data source query response
+	function handleColChartSize(response) {
+		if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' '
+					+ response.getDetailedMessage());
+			return;
+		}
+
+		var data = response.getDataTable();
+		var options = {
+			title : 'Top 20 File Types by Size',
+			hAxis : {
+				title : 'File Types',
+				titleTextStyle : {
+					color : 'red'
+				}
+			}
+		};
+
+		var chart = new google.visualization.ColumnChart(document
+				.getElementById('Colchart_div_size'));
+		chart.draw(data, options);
+	}
+
+	function handleColChartCount(response) {
+		if (response.isError()) {
+			alert('Error in query: ' + response.getMessage() + ' '
+					+ response.getDetailedMessage());
+			return;
+		}
+
+		var data = response.getDataTable();
+		var options = {
+			title : 'Top 20 File Types by Count',
+			hAxis : {
+				title : 'File Types',
+				titleTextStyle : {
+					color : 'red'
+				}
+			}
+		};
+
+		var chart = new google.visualization.ColumnChart(document
+				.getElementById('Colchart_div_count'));
+		chart.draw(data, options);
+	}
+
+	// google.setOnLoadCallback(drawChart);
+</script>
+</head>
+<body>
+	<div id="container" style=" width: 1900px;">
+		<div style="width:1800px;margin: 0 auto;">
+		<div id="Colchart_div_size"
+			style="float: left; width: 900px; height: 600px;"></div>
+		<div id="Colchart_div_count"
+			style="float: right; width: 900px; height: 600px;"></div>
+		<div id"clearfloating" style="clear: both;"></div>
+		</div>
+		<div style="width:1800px;margin: 0 auto;">
+		<div id="Linechart_div_size" style="float: left; width: 900px; height: 600px;"></div>
+		<div id="Linechart_div_Count" style="float: left; width: 900px; height: 600px;"></div>
+		<div id"clearfloating" style="clear: both;"></div>
+		</div>
+		
+	</div>
+
+	<div id="toolbar_div"></div>
+</body>
+</html>
